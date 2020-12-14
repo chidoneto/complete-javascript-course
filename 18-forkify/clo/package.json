@@ -11,7 +11,7 @@
   "author": "CLO",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^2.0.0-nightly.476",
+    "parcel": "^2.0.0-nightly.477",
     "sass": "^1.30.0"
   },
   "dependencies": {
