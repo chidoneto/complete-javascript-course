@@ -10,6 +10,7 @@ class RecipeView extends View {
     this._errorMessage = 'We could not find that recipe. Please try another one!';
     this._message = '';
   }
+
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
   }
@@ -20,7 +21,6 @@ class RecipeView extends View {
       if (!btn) return;
 
       const updateTo = +btn.dataset.updateTo;
-      console.log(updateTo);
       if (updateTo > 0) handler(updateTo);
     });
   }
@@ -29,7 +29,6 @@ class RecipeView extends View {
     this._parentElement.addEventListener('click', e => {
       const btn = e.target.closest('.btn--bookmark');
       if (!btn) return;
-
       handler();
     });
   }
@@ -59,12 +58,12 @@ class RecipeView extends View {
           <span class="recipe__info-text">servings</span>
 
           <div class="recipe__info-buttons">
-            <button data-update-to="${this._data.servings - 1}" class="btn--tiny btn--update-servings">
+            <button class="btn--tiny btn--update-servings" data-update-to="${this._data.servings - 1}">
               <svg>
                 <use href="${icons}#icon-minus-circle"></use>
               </svg>
             </button>
-            <button data-update-to="${this._data.servings + 1}" class="btn--tiny btn--update-servings">
+            <button class="btn--tiny btn--update-servings" data-update-to="${this._data.servings + 1}">
               <svg>
                 <use href="${icons}#icon-plus-circle"></use>
               </svg>
@@ -72,7 +71,10 @@ class RecipeView extends View {
           </div>
         </div>
 
-        <div class="recipe__user-generated">
+        <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+          <svg>
+            <use href="${icons}#icon-user"></use>
+          </svg>
         </div>
         <button class="btn--round btn--bookmark">
           <svg class="">
@@ -84,7 +86,7 @@ class RecipeView extends View {
       <div class="recipe__ingredients">
         <h2 class="heading--2">Recipe ingredients</h2>
         <ul class="recipe__ingredient-list">
-        ${this._data.ingredients.map(ing => this._generateMarkupIngredient(ing)).join('')}
+          ${this._data.ingredients.map(this._generateMarkupIngredient).join('')}
         </ul>
       </div>
       
@@ -107,7 +109,6 @@ class RecipeView extends View {
         </a>
       </div>
     `;
-
   }
 
   _generateMarkupIngredient(ing) {
@@ -116,7 +117,9 @@ class RecipeView extends View {
         <svg class="recipe__icon">
           <use href="${icons}#icon-check"></use>
         </svg>
-        <div class="recipe__quantity">${new Fraction(ing.quantity || '').toString()}</div>
+        <div class="recipe__quantity">
+          ${ing.quantity ? new Fraction(ing.quantity).toString() : ''}
+        </div>
         <div class="recipe__description">
           <span class="recipe__unit">${ing.unit}</span>
           ${ing.description}
@@ -124,7 +127,6 @@ class RecipeView extends View {
       </li>      
     `;
   }
-
 }
 
 export default new RecipeView();
